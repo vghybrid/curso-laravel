@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Post\PutRequest;
 use App\Http\Requests\Post\StoreRequest;
+
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -15,7 +17,8 @@ class PostController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        echo 'Index';
+        $posts = Post::paginate(1);
+        return view('dashboard.post.index', compact('posts'));
     }
 
     /**
@@ -37,8 +40,8 @@ class PostController extends Controller {
      */
     public function store(StoreRequest $request) {
         // dd($request->all());
-        $data = array_merge($request->all(), ['image' => '']);
-        Post::create($data);
+        // $data = array_merge($request->all(), ['image' => '']);
+        Post::create($request->validated());
     }
 
     /**
@@ -48,7 +51,7 @@ class PostController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show(Post $post) {
-        //
+        echo "show";
     }
 
     /**
@@ -58,7 +61,8 @@ class PostController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit(Post $post) {
-        //
+        $categories = Category::pluck('id', 'title');
+        return view('dashboard.post.edit', compact('categories','post'));
     }
 
     /**
@@ -68,8 +72,8 @@ class PostController extends Controller {
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post) {
-        //
+    public function update(PutRequest $request, Post $post) {
+        $post->update($request->validated());
     }
 
     /**
@@ -79,6 +83,6 @@ class PostController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy(Post $post) {
-        //
+        echo "destroy";
     }
 }
