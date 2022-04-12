@@ -25,11 +25,12 @@ class PutRequest extends FormRequest {
     public function rules() {
         return [
             "title" => "required|min:8|max:255",
-            // "slug" => "required|min:5|max:255|unique:posts",
+            "slug" => "required|min:5|max:255|unique:posts,slug,".$this->route("post")->id,
             "category_id" => "required|integer",
             "posted" => "required",
             "content" => "required|min:7",
-            "description" => "required|min:7"
+            "description" => "required|min:7",
+            "image" => "mimes:jpeg,jpg,png|max:10240"
         ];
     }
 }

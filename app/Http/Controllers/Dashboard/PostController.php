@@ -29,7 +29,7 @@ class PostController extends Controller {
     public function create() {
         $categories = Category::pluck('id', 'title');
         $post = new Post();
-        return view('dashboard.post.create', compact('categories', 'post'));
+        return view('dashboard.post.create', compact('categories', 'post'))->with('status', 'Registro creado correctamente.');
     }
 
     /**
@@ -39,9 +39,8 @@ class PostController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(StoreRequest $request) {
-        // dd($request->all());
-        // $data = array_merge($request->all(), ['image' => '']);
         Post::create($request->validated());
+        return to_route("post.index");
     }
 
     /**
@@ -51,7 +50,7 @@ class PostController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show(Post $post) {
-        echo "show";
+        return view("dashboard.post.show", compact('post'));
     }
 
     /**
@@ -73,7 +72,14 @@ class PostController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(PutRequest $request, Post $post) {
-        $post->update($request->validated());
+        $data = $request->validated();
+        if(isset($data["image"])) {
+            $data["image"] = $filename = time().".".$data["image"]->extension();
+            $request->image->move(public_path("imagen"), $filename);
+        }
+        $post->update($data);
+        // $request->session()->flash('status', 'Registro actualizado.');
+        return to_route("post.index")->with('status', 'Registro actualizado.');
     }
 
     /**
@@ -83,6 +89,7 @@ class PostController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy(Post $post) {
-        echo "destroy";
+        $post->delete();
+        return to_route("post.index")->with('status', 'Registro eliminado correctamente.');
     }
 }
