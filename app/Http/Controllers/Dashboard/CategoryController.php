@@ -15,8 +15,7 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         $categories = Category::paginate(1);
         return view('dashboard.category.index', compact('categories'));
     }
@@ -26,8 +25,7 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         $category = new Category();
         echo view('dashboard.category.create', compact('category'));
     }
@@ -38,8 +36,7 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreRequest $request)
-    {
+    public function store(StoreRequest $request) {
         
         Category::create($request->validated());
         return to_route("category.index")->with('status',"Registro creado.");;
@@ -51,8 +48,7 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show(Category $category)
-    {
+    public function show(Category $category) {
         return view("dashboard.category.show",compact('category'));
     }
 
@@ -62,8 +58,7 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
-    {
+    public function edit(Category $category) {
         echo view('dashboard.category.edit', compact('category'));
     }
 
@@ -74,9 +69,7 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(PutRequest $request, Category $category)
-    {
-        
+    public function update(PutRequest $request, Category $category) {  
         $category->update($request->validated());
         return to_route("category.index")->with('status',"Registro actualizado.");
     }
@@ -87,8 +80,7 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
-    {
+    public function destroy(Category $category) {
         $category->delete();
         return to_route("category.index")->with('status',"Registro eliminado.");
     }
